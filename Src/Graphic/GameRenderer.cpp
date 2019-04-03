@@ -3,49 +3,85 @@
 
 // System headers
 #include <iostream>
+#include <string.h>
 
 // Own headers
 #include <GameRenderer.h>
-
+#include <GameContent.h>
 
 GameRenderer::GameRenderer()
-    : m_window(nullptr)
+    : m_programId {0}
+    , m_triangle {nullptr}
 {
-    std::cout << "GameRenderer::Constructor" << std::endl;
+    initializeOpenGLFunctions();
 }
 
 GameRenderer::~GameRenderer() {
     std::cout << "GameRenderer::Destructor" << std::endl;
 }
 
-const QQuickWindow* GameRenderer::window() {
-    return m_window;
-}
+void GameRenderer::init() {
 
-void GameRenderer::onWindowChanged(QQuickWindow *window) {
-    // Set new window
-    if(window != m_window) {
-        // Clean previus connections
-        disconnect(m_window, &QQuickWindow::widthChanged, this, &GameRenderer::onWindowSizeChanged);
-        disconnect(m_window, &QQuickWindow::heightChanged, this, &GameRenderer::onWindowSizeChanged);
+    const char* vertexShaderSource = "attribute vec2 vPos;\n"
+                                     "void main() {\n"
+                                     "    gl_Position = vec4(vPos, 0.0, 1.0);\n"
+                                     "}\0";
 
-        // Set up new window callbacks
-        m_window = window;
-        if(nullptr != window) {
-            connect(m_window, &QQuickWindow::widthChanged, this, &GameRenderer::onWindowSizeChanged);
-            connect(m_window, &QQuickWindow::heightChanged, this, &GameRenderer::onWindowSizeChanged);
-            connect(m_window, &QQuickWindow::beforeRendering, this, &GameRenderer::drawScene, Qt::DirectConnection);
-        }
+    const char* fragmentShaderSource = "void main() {\n"
+                                       "    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n"
+                                       "}\0";
+
+    int success = 0;
+    char infoLog[512];
+
+    // Create Vertex Shader
+    uint vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(vertexShaderId, 1, &vertexShaderSource, nullptr);
+    glCompileShader(vertexShaderId);
+    glGetShaderiv(vertexShaderId, GL_COMPILE_STATUS, &success);
+    if(!success) {
+        glGetShaderInfoLog(vertexShaderId, 512, nullptr, infoLog);
+        std::cout << "ERROR::VERTEX::SHADER::COMPILE_FAILD\n" << infoLog << std::endl;
     }
+
+    // Create Fragment Shader
+    uint fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(fragmentShaderId, 1, &fragmentShaderSource, nullptr);
+    glCompileShader(fragmentShaderId);
+    glGetShaderiv(fragmentShaderId, GL_COMPILE_STATUS, &success);
+    if(!success) {
+        glGetShaderInfoLog(fragmentShaderId, 512, nullptr, infoLog);
+        std::cout << "ERROR::FRAGMENT::SHADER::COMPILE_FAILD\n" << infoLog << std::endl;
+    }
+
+    // Create graphic pipline program
+    m_programId = glCreateProgram();
+    glAttachShader(m_programId, vertexShaderId);
+    glAttachShader(m_programId, fragmentShaderId);
+    glLinkProgram(m_programId);
+
+    glGetProgramiv(m_programId, GL_LINK_STATUS, &success);
+    if(!success) {
+        glGetProgramInfoLog(m_programId, 512, nullptr, infoLog);
+        std::cout << "ERROR::PROGRAM::LINKING_FAILD\n" << infoLog << std::endl;
+    }
+
+    glDeleteShader(vertexShaderId);
+    glDeleteShader(fragmentShaderId);
+
+    m_triangle = new float[6] {
+                    -0.5, -0.5,
+                     0.0,  0.5,
+                     0.5, -0.5,
+                 };
+
+
 }
 
-void GameRenderer::onWindowSizeChanged()
+void GameRenderer::draw(GameContent *content)
 {
-    // Get current window size and adjust viewport
-    QSize size = m_window->size();
-    // TO DO - Adjust viewport
+
 }
 
-void GameRenderer::drawScene() {
-    std::cout << "Render scene" << std::endl;
-}
+
+

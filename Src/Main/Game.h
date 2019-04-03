@@ -9,7 +9,9 @@
 // Own headers
 
 // Forward declaration
+class QQuickWindow;
 class GameRenderer;
+class GameContent;
 
 class Game : public QQuickItem
 {
@@ -21,17 +23,30 @@ public:
     Game();
     ~Game();
 
-public slots:
-    void test ();
-
 private slots:
-    // Handle change of the main window
-    void handleWindowChanged(QQuickWindow *window);
+    // Initialize Game module
+    void init();
+
+    // Draw one full frame of the game
+    void drawGame();
+
+    // Slots invoke when window connected to the game changed
+    void onWindowChanged(QQuickWindow* window);
+
+    // Handle change of the main window size
+    void onWindowSizeChanged(int);
+
+
 
 private: // Atributes
     // Handler for the game renderer
     GameRenderer* m_renderer;
 
+    // Content of the game
+    GameContent* m_content;
+
+    // Main window handler
+    QQuickWindow *m_window;
 
 //    qreal t() const { return m_t; }
 //    void setT(qreal t);

@@ -15,7 +15,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     Src/main.cpp \
     Src/Main/Game.cpp \
-    Src/Graphic/GameRenderer.cpp
+    Src/Main/GameContent.cpp \
+    Src/Graphic/GameRenderer.cpp \
 
 RESOURCES += \
     Assets/QML/qml.qrc
@@ -39,4 +40,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     Src/Main/Game.h \
+    Src/Main/GameContent.h \
     Src/Graphic/GameRenderer.h \
+
