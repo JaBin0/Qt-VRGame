@@ -26,20 +26,21 @@ void Game::init() {
     m_renderer = new GameRenderer();
     m_content = new GameContent();
     m_renderer->init();
+    window()->setClearBeforeRendering(false);
 }
 
 void Game::drawGame() {
     std::cout << "Draw game frame" << std::endl;
-    m_renderer->draw(m_content);
+    m_renderer->draw(m_content, m_window);
 
-    m_window->update();
+   // m_window->update();
 }
 
 void Game::onWindowChanged(QQuickWindow *window) {
     m_window = window;
     if(nullptr != window) {
         connect(m_window, &QQuickWindow::sceneGraphInitialized, this, &Game::init, Qt::DirectConnection);
-        connect(m_window, &QQuickWindow::beforeRendering, this, &Game::drawGame);
+        connect(m_window, &QQuickWindow::beforeRendering, this, &Game::drawGame, Qt::DirectConnection);
         connect(m_window, &QQuickWindow::widthChanged, this, &Game::onWindowSizeChanged);
         connect(m_window, &QQuickWindow::heightChanged, this, &Game::onWindowSizeChanged);
     }

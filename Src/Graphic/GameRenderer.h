@@ -20,11 +20,14 @@ public:
     void init();
 
     // Draw given content
-    void draw(GameContent* content);
+    void draw(GameContent* content, QQuickWindow* window);
 
 private:
     // Graphic pipline id
     uint m_programId;
+
+    // Vertex array object
+    uint vbo;
 
     // Geometric representation of the test triangle
     float* m_triangle;

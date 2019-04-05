@@ -9,7 +9,7 @@
 // Own headers
 #include <Game.h>
 
-const std::string version = "0.02";
+const std::string version = "0.04";
 
 int main(int argc, char *argv[])
 {

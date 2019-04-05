@@ -48,6 +48,7 @@ private: // Atributes
     // Main window handler
     QQuickWindow *m_window;
 
+
 //    qreal t() const { return m_t; }
 //    void setT(qreal t);
 //signals:

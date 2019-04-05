@@ -1,5 +1,6 @@
 // Qt headers
 #include <QQuickWindow>
+#include <QOpenGLContext>
 
 // System headers
 #include <iostream>
@@ -21,7 +22,7 @@ GameRenderer::~GameRenderer() {
 }
 
 void GameRenderer::init() {
-
+    glViewport(0, 0, 320, 480);
     const char* vertexShaderSource = "attribute vec2 vPos;\n"
                                      "void main() {\n"
                                      "    gl_Position = vec4(vPos, 0.0, 1.0);\n"
@@ -75,12 +76,33 @@ void GameRenderer::init() {
                      0.5, -0.5,
                  };
 
+    glGenBuffers(1, &vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6, m_triangle, GL_STATIC_DRAW);
+    std::cout << sizeof(float) << std::endl;
 
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
 }
 
-void GameRenderer::draw(GameContent *content)
+void GameRenderer::draw(GameContent *content, QQuickWindow* window)
 {
+    QOpenGLContext* context = window->openglContext();
 
+    //context->makeCurrent(window);
+
+    std::cout << "Draw " << std::endl;
+    glUseProgram(m_programId);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+
+    glClearColor(0.2, 0.6, 0.2, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+   // context->swapBuffers(window);
+    //context->doneCurrent();
+   // window->resetOpenGLState();
 }
 
 
