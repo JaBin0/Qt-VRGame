@@ -3,8 +3,8 @@ import GameQML 1.0
 
 Item {
     id: root
-    width: 320
-    height: 480
+    width: 800
+    height: 600
 
     Game {
         id: game

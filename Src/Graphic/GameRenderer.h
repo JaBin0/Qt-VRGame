@@ -29,8 +29,12 @@ private:
     // Vertex array object
     uint vbo;
 
+    uint m_cubeVBO;
+
     // Geometric representation of the test triangle
     float* m_triangle;
+
+    float* m_cube;
 };
 
 #endif // GAMERENDERER_H

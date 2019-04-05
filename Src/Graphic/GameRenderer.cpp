@@ -1,6 +1,8 @@
 // Qt headers
 #include <QQuickWindow>
 #include <QOpenGLContext>
+#include <QMatrix4x4>
+#include <QVector3D>
 
 // System headers
 #include <iostream>
@@ -13,6 +15,7 @@
 GameRenderer::GameRenderer()
     : m_programId {0}
     , m_triangle {nullptr}
+    , m_cubeVBO(0)
 {
     initializeOpenGLFunctions();
 }
@@ -22,14 +25,24 @@ GameRenderer::~GameRenderer() {
 }
 
 void GameRenderer::init() {
-    glViewport(0, 0, 320, 480);
-    const char* vertexShaderSource = "attribute vec2 vPos;\n"
+    glViewport(0, 0, 800, 600);
+    glEnable(GL_DEPTH_TEST);
+    const char* vertexShaderSource = "attribute vec3 vPos;\n"
+                                     "attribute vec3 vColor;\n"
+                                     ""
+                                     "varying vec3 fColor;\n"
+                                     ""
+                                     "uniform mat4 perspective;\n"
+                                     "uniform mat4 lookAt;\n"
+                                     ""
                                      "void main() {\n"
-                                     "    gl_Position = vec4(vPos, 0.0, 1.0);\n"
+                                     "    gl_Position = perspective * lookAt *vec4(vPos, 1.0);\n"
+                                     "    fColor = vColor;"
                                      "}\0";
 
-    const char* fragmentShaderSource = "void main() {\n"
-                                       "    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n"
+    const char* fragmentShaderSource = "varying vec3 fColor;\n"
+                                       "void main() {\n"
+                                       "    gl_FragColor = vec4(fColor, 1.0);\n"
                                        "}\0";
 
     int success = 0;
@@ -76,33 +89,103 @@ void GameRenderer::init() {
                      0.5, -0.5,
                  };
 
+    m_cube = new float[216]  {
+                    // Front face
+                     0.5, -0.5,  -4.5, 1.0, 0.0, 0.0,
+                    -0.5, -0.5,  -3.5, 1.0, 0.0, 0.0,
+                     0.5, -0.5,  -3.5, 1.0, 0.0, 0.0,
+
+                     0.5, -0.5,  -4.5, 1.0, 0.0, 0.0,
+                    -0.5, -0.5,  -4.5, 1.0, 0.0, 0.0,
+                    -0.5, -0.5,  -3.5, 1.0, 0.0, 0.0,
+                    // Second face
+                    -0.5,  0.5,  -3.5, 0.0, 1.0, 0.0,
+                     0.5,  0.5,  -4.5, 0.0, 1.0, 0.0,
+                     0.5,  0.5,  -3.5, 0.0, 1.0, 0.0,
+
+                    -0.5,  0.5,  -3.5, 0.0, 1.0, 0.0,
+                    -0.5,  0.5,  -4.5, 0.0, 1.0, 0.0,
+                     0.5,  0.5,  -4.5, 0.0, 1.0, 0.0,
+                    // Third face
+                     0.5,  0.5,  -3.5, 0.0, 0.0, 1.0,
+                     0.5, -0.5,  -3.5, 0.0, 0.0, 1.0,
+                     0.5, -0.5,  -4.5, 0.0, 0.0, 1.0,
+
+                     0.5,  0.5,  -3.5, 0.0, 0.0, 1.0,
+                     0.5, -0.5,  -4.5, 0.0, 0.0, 1.0,
+                     0.5,  0.5,  -4.5, 0.0, 0.0, 1.0,
+                    // Fourth face
+                     0.5,  0.5,  -4.5, 1.0, 1.0, 0.0,
+                     0.5, -0.5,  -4.5, 1.0, 1.0, 0.0,
+                    -0.5, -0.5,  -4.5, 1.0, 1.0, 0.0,
+
+                     0.5,  0.5,  -4.5, 1.0, 1.0, 0.0,
+                    -0.5, -0.5,  -4.5, 1.0, 1.0, 0.0,
+                    -0.5,  0.5,  -4.5, 1.0, 1.0, 0.0,
+                    // Fifth face
+                    -0.5, -0.5,  -4.5, 1.0, 0.0, 1.0,
+                    -0.5,  0.5,  -3.5, 1.0, 0.0, 1.0,
+                    -0.5, -0.5,  -3.5, 1.0, 0.0, 1.0,
+
+                    -0.5,  0.5,  -3.5, 1.0, 0.0, 1.0,
+                    -0.5,  0.5,  -4.5, 1.0, 0.0, 1.0,
+                    -0.5, -0.5,  -4.5, 1.0, 0.0, 1.0,
+                    // Sixth face
+                     0.5, -0.5,  -3.5, 0.0, 1.0, 1.0,
+                    -0.5,  0.5,  -3.5, 0.0, 1.0, 1.0,
+                     0.5,  0.5,  -3.5, 0.0, 1.0, 1.0,
+
+                     0.5, -0.5,  -3.5, 0.0, 1.0, 1.0,
+                    -0.5, -0.5,  -3.5, 0.0, 1.0, 1.0,
+                    -0.5,  0.5,  -3.5, 0.0, 1.0, 1.0,
+                };
+
+    glGenBuffers(1, &m_cubeVBO);
+    glBindBuffer(GL_ARRAY_BUFFER, m_cubeVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 216, m_cube, GL_STATIC_DRAW);
+
+
     glGenBuffers(1, &vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6, m_triangle, GL_STATIC_DRAW);
     std::cout << sizeof(float) << std::endl;
 
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
+//    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
+//    glEnableVertexAttribArray(0);
 }
 
-void GameRenderer::draw(GameContent *content, QQuickWindow* window)
+void GameRenderer::draw(GameContent*, QQuickWindow*)
 {
-    QOpenGLContext* context = window->openglContext();
-
-    //context->makeCurrent(window);
-
     std::cout << "Draw " << std::endl;
     glUseProgram(m_programId);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, m_cubeVBO);
 
-    glClearColor(0.2, 0.6, 0.2, 1);
-    glClear(GL_COLOR_BUFFER_BIT);
+//    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
+//    glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+
+    // Perspective Matrix
+    QMatrix4x4 perspective;
+    perspective.setToIdentity();
+    perspective.perspective(45, 800/600, 0.1, 100.0);
+    glUniformMatrix4fv(glGetUniformLocation(m_programId, "perspective"), 1, GL_FALSE, perspective.data());
+
+    QMatrix4x4 lookAt;
+    lookAt.setToIdentity();
+    lookAt.lookAt(QVector3D(4.0, 3.0, 3.0), QVector3D(0.0, 0.0, -4.0), QVector3D(0.0, 1.0, 0.0));
+    glUniformMatrix4fv(glGetUniformLocation(m_programId, "lookAt"), 1, GL_FALSE, lookAt.data());
 
 
-    glDrawArrays(GL_TRIANGLES, 0, 3);
-   // context->swapBuffers(window);
-    //context->doneCurrent();
-   // window->resetOpenGLState();
+    glClearColor(0.2, 0.6, 0.2, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+    std::cout << "Draw End" << std::endl;
 }
 
 
