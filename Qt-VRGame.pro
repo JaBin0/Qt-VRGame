@@ -17,14 +17,18 @@ SOURCES += \
     Src/Main/Game.cpp \
     Src/Main/GameContent.cpp \
     Src/Graphic/GameRenderer.cpp \
+    Src/Assets/GameResourcesManager.cpp \
+    Src/Main/SysMethods.cpp
 
 RESOURCES += \
-    Assets/QML/qml.qrc
+    Assets/QML/qml.qrc \
+    Assets/Shaders/shaders.qrc
 
 INCLUDEPATH += \
     Src \
     Src/Main \
     Src/Graphic \
+    Src/Assets \
 
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
@@ -42,4 +46,10 @@ HEADERS += \
     Src/Main/Game.h \
     Src/Main/GameContent.h \
     Src/Graphic/GameRenderer.h \
+    Src/Assets/GameResourcesManager.h \
+    Src/Main/SystemTypes.h \
+    Src/Main/SysMethods.h \
+    Src/Main/Config.h
+
+DISTFILES +=
 

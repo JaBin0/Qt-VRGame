@@ -12,6 +12,7 @@
 class QQuickWindow;
 class GameRenderer;
 class GameContent;
+class GameResourcesManager;
 
 class Game : public QQuickItem
 {
@@ -44,6 +45,9 @@ private: // Atributes
 
     // Content of the game
     GameContent* m_content;
+
+    // Game resources manager;
+    GameResourcesManager* m_resourcesManager;
 
     // Main window handler
     QQuickWindow *m_window;

@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Desktop/ShadersCfg.cfg</file>
+        <file>Android/ShadersCfg.cfg</file>
+        <file>Desktop/Basic_frag.glsl</file>
+        <file>Desktop/Basic_vert.glsl</file>
+        <file>Android/Basic_frag.glsl</file>
+        <file>Android/Basic_vert.glsl</file>
+    </qresource>
+</RCC>
