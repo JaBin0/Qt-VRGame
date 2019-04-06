@@ -9,7 +9,7 @@
 // Own headers
 #include <Game.h>
 
-const std::string version = "0.04";
+const std::string version = "0.03";
 
 int main(int argc, char *argv[])
 {
@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<Game>("GameQML", 1, 0, "Game");
 
     // Setup main view
-    view.setResizeMode(QQuickView::SizeRootObjectToView);
+    //view.setResizeMode(QQuickView::SizeRootObjectToView);
     view.setSource(QUrl("qrc:///QML//main.qml"));
     view.show();
 

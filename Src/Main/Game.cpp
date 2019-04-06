@@ -33,7 +33,7 @@ void Game::drawGame() {
     std::cout << "Draw game frame" << std::endl;
     m_renderer->draw(m_content, m_window);
 
-   // m_window->update();
+    m_window->update();
 }
 
 void Game::onWindowChanged(QQuickWindow *window) {

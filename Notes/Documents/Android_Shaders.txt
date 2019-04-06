@@ -1,0 +1,2 @@
+Shadery na telefony potrzebujê definiowaæ uniformy i varaying z dopiskiem highp lub lowp innaczej nie dzia³aj¹
+W przypadku desktopa nie mo¿e byæ tam tych 

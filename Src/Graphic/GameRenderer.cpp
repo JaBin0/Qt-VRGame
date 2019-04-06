@@ -25,8 +25,21 @@ GameRenderer::~GameRenderer() {
 }
 
 void GameRenderer::init() {
-    glViewport(0, 0, 800, 600);
+    glViewport(0, 0, 1280, 720);
     glEnable(GL_DEPTH_TEST);
+//    const char* Android_vertexShaderSource = "attribute vec3 vPos;\n"
+//                                     "attribute vec3 vColor;\n"
+//                                     ""
+//                                     "varying highp vec3 fColor;\n"
+//                                     ""
+//                                     "uniform highp mat4 perspective;\n"
+//                                     "uniform highp mat4 lookAt;\n"
+//                                     ""
+//                                     "void main() {\n"
+//                                     "    gl_Position = perspective * lookAt * vec4(vPos, 1.0);\n"
+//                                     "    fColor = vColor;"
+//                                     "}\0";
+
     const char* vertexShaderSource = "attribute vec3 vPos;\n"
                                      "attribute vec3 vColor;\n"
                                      ""
@@ -36,14 +49,32 @@ void GameRenderer::init() {
                                      "uniform mat4 lookAt;\n"
                                      ""
                                      "void main() {\n"
-                                     "    gl_Position = perspective * lookAt *vec4(vPos, 1.0);\n"
+                                     "    gl_Position = perspective * lookAt * vec4(vPos, 1.0);\n"
                                      "    fColor = vColor;"
                                      "}\0";
+
+//    const char* Simple_vertexShaderSource = "attribute vec2 vPos;\n"
+//                                     ""
+//                                     "void main() {\n"
+//                                     "    gl_Position = vec4(vPos, 0.0, 1.0);\n"
+//                                     "}\0";
+
+
+//    const char* Android_fragmentShaderSource = "varying highp vec3 fColor;\n"
+//                                       "void main() {\n"
+//                                       "    gl_FragColor = vec4(fColor.r, fColor.g, fColor.b, 1.0);\n"
+//                                       "}\0";
 
     const char* fragmentShaderSource = "varying vec3 fColor;\n"
                                        "void main() {\n"
                                        "    gl_FragColor = vec4(fColor, 1.0);\n"
                                        "}\0";
+
+//    const char* Simple_fragmentShaderSource =""
+//                                      "uniform vec2 test;\n"
+//                                         "void main() {\n"
+//                                      "    gl_FragColor = vec4(1.0, test.x/640, 0.0, 1.0);\n"
+//                                       "}\0";
 
     int success = 0;
     char infoLog[512];
@@ -139,6 +170,56 @@ void GameRenderer::init() {
                     -0.5, -0.5,  -3.5, 0.0, 1.0, 1.0,
                     -0.5,  0.5,  -3.5, 0.0, 1.0, 1.0,
                 };
+//    m_cube = new float[216]  {
+//                    // Front face
+//                     0.5, -0.5,  -4.5, 1.0, 0.0, 0.0,
+//                    -0.5, -0.5,  -3.5, 1.0, 0.0, 0.0,
+//                     0.5, -0.5,  -3.5, 1.0, 0.0, 0.0,
+
+//                     0.5, -0.5,  -4.5, 1.0, 0.0, 0.0,
+//                    -0.5, -0.5,  -4.5, 1.0, 0.0, 0.0,
+//                    -0.5, -0.5,  -3.5, 1.0, 0.0, 0.0,
+//                    // Second face
+//                    -0.5,  0.5,  -3.5, 0.0, 1.0, 0.0,
+//                     0.5,  0.5,  -4.5, 0.0, 1.0, 0.0,
+//                     0.5,  0.5,  -3.5, 0.0, 1.0, 0.0,
+
+//                    -0.5,  0.5,  -3.5, 0.0, 1.0, 0.0,
+//                    -0.5,  0.5,  -4.5, 0.0, 1.0, 0.0,
+//                     0.5,  0.5,  -4.5, 0.0, 1.0, 0.0,
+//                    // Third face
+//                     0.5,  0.5,  -3.5, 0.0, 0.0, 1.0,
+//                     0.5, -0.5,  -3.5, 0.0, 0.0, 1.0,
+//                     0.5, -0.5,  -4.5, 0.0, 0.0, 1.0,
+
+//                     0.5,  0.5,  -3.5, 0.0, 0.0, 1.0,
+//                     0.5, -0.5,  -4.5, 0.0, 0.0, 1.0,
+//                     0.5,  0.5,  -4.5, 0.0, 0.0, 1.0,
+//                    // Fourth face
+//                     0.5,  0.5,  -4.5, 1.0, 1.0, 0.0,
+//                     0.5, -0.5,  -4.5, 1.0, 1.0, 0.0,
+//                    -0.5, -0.5,  -4.5, 1.0, 1.0, 0.0,
+
+//                     0.5,  0.5,  -4.5, 1.0, 1.0, 0.0,
+//                    -0.5, -0.5,  -4.5, 1.0, 1.0, 0.0,
+//                    -0.5,  0.5,  -4.5, 1.0, 1.0, 0.0,
+//                    // Fifth face
+//                    -0.5, -0.5,  -4.5, 1.0, 0.0, 1.0,
+//                    -0.5,  0.5,  -3.5, 1.0, 0.0, 1.0,
+//                    -0.5, -0.5,  -3.5, 1.0, 0.0, 1.0,
+
+//                    -0.5,  0.5,  -3.5, 1.0, 0.0, 1.0,
+//                    -0.5,  0.5,  -4.5, 1.0, 0.0, 1.0,
+//                    -0.5, -0.5,  -4.5, 1.0, 0.0, 1.0,
+//                    // Sixth face
+//                     0.5, -0.5,  -3.5, 0.0, 1.0, 1.0,
+//                    -0.5,  0.5,  -3.5, 0.0, 1.0, 1.0,
+//                     0.5,  0.5,  -3.5, 0.0, 1.0, 1.0,
+
+//                     0.5, -0.5,  -3.5, 0.0, 1.0, 1.0,
+//                    -0.5, -0.5,  -3.5, 0.0, 1.0, 1.0,
+//                    -0.5,  0.5,  -3.5, 0.0, 1.0, 1.0,
+//                };
 
     glGenBuffers(1, &m_cubeVBO);
     glBindBuffer(GL_ARRAY_BUFFER, m_cubeVBO);
@@ -156,8 +237,9 @@ void GameRenderer::init() {
 
 void GameRenderer::draw(GameContent*, QQuickWindow*)
 {
-    std::cout << "Draw " << std::endl;
+    //std::cout << "Draw " << std::endl;
     glUseProgram(m_programId);
+//    glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBindBuffer(GL_ARRAY_BUFFER, m_cubeVBO);
 
 //    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
@@ -171,7 +253,7 @@ void GameRenderer::draw(GameContent*, QQuickWindow*)
     // Perspective Matrix
     QMatrix4x4 perspective;
     perspective.setToIdentity();
-    perspective.perspective(45, 800/600, 0.1, 100.0);
+    perspective.perspective(45, (1280.0/720.0), 0.1, 100.0);
     glUniformMatrix4fv(glGetUniformLocation(m_programId, "perspective"), 1, GL_FALSE, perspective.data());
 
     QMatrix4x4 lookAt;
@@ -179,13 +261,16 @@ void GameRenderer::draw(GameContent*, QQuickWindow*)
     lookAt.lookAt(QVector3D(4.0, 3.0, 3.0), QVector3D(0.0, 0.0, -4.0), QVector3D(0.0, 1.0, 0.0));
     glUniformMatrix4fv(glGetUniformLocation(m_programId, "lookAt"), 1, GL_FALSE, lookAt.data());
 
+//    glUniform2f(glGetUniformLocation(m_programId, "test"), 480.0, 0.3);
 
-    glClearColor(0.2, 0.6, 0.2, 1.0);
+
+    glClearColor(0.2, 0.2, 0.2, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
     glDrawArrays(GL_TRIANGLES, 0, 36);
-    std::cout << "Draw End" << std::endl;
+//    glDrawArrays(GL_TRIANGLES, 0, 3);
+    //std::cout << "Draw End" << std::endl;
 }
 
 
