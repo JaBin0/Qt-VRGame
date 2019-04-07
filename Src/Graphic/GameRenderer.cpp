@@ -63,11 +63,31 @@ void GameRenderer::init(GameResourcesManager* const resMgrCallback, QQuickWindow
 
     // Load models
     QVector<float> modelData;
-    resMgrCallback->loadModel(":/Obj/Monkey.obj", modelData);
+    resMgrCallback->loadModel(":/Obj/Cube.obj", modelData);
+//    for(auto val : modelData) {
+//    //    std::cout << val <<", ";
+//    }
 
     glGenBuffers(1, &m_cubeVBO);
     glBindBuffer(GL_ARRAY_BUFFER, m_cubeVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(float) * modelData.length(), modelData.data(), GL_STATIC_DRAW);
+
+    // Load Texture
+    QImage img(":/Cube.jpg");
+    std::cout <<"|" << std::endl;
+    std::cout << img.format()<<std::endl;
+    img = img.convertToFormat(QImage::Format_RGBA8888);
+    img.mirrored();
+    glGenTextures(1, &m_texture);
+    glBindTexture(GL_TEXTURE_2D, m_texture);
+
+//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, img.width(), img.height(), 0, GL_RGB, GL_UNSIGNED_BYTE, img.bits());
+    glGenerateMipmap(GL_TEXTURE_2D);
 }
 
 void GameRenderer::draw(GameContent*, QQuickWindow*)
@@ -75,6 +95,9 @@ void GameRenderer::draw(GameContent*, QQuickWindow*)
     uint currentProgram = m_shadersMap.value("Basic");
     glUseProgram(currentProgram);
     glBindBuffer(GL_ARRAY_BUFFER, m_cubeVBO);
+
+    //glBindTexture(GL_TEXTURE_2D, m_texture);
+    //glActiveTexture(GL_TEXTURE0);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
@@ -88,7 +111,7 @@ void GameRenderer::draw(GameContent*, QQuickWindow*)
 
     QMatrix4x4 lookAt;
     lookAt.setToIdentity();
-    lookAt.lookAt(QVector3D(2.0, 2.0, 7.0), QVector3D(0.0, 0.0, 0.0), QVector3D(0.0, 1.0, 0.0));
+    lookAt.lookAt(QVector3D(2.0, 2.0, 1.0), QVector3D(0.0, 0.0, 0.0), QVector3D(0.0, 1.0, 0.0));
     glUniformMatrix4fv(glGetUniformLocation(currentProgram, "lookAt"), 1, GL_FALSE, lookAt.data());
 
 

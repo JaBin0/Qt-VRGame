@@ -39,6 +39,9 @@ private:
     // Map which connect graphic pipleine program name with it's handler
     QMap <QString, uint> m_shadersMap;
 
+    // Test texture
+    uint m_texture;
+
 
     // Graphic pipline id
     uint m_programId;

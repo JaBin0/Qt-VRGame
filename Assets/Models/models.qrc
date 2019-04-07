@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/">
-        <file>Obj/Cube.obj</file>
         <file>Obj/Monkey.obj</file>
+        <file>Obj/Cube.obj</file>
     </qresource>
 </RCC>
