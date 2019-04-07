@@ -22,7 +22,8 @@ SOURCES += \
 
 RESOURCES += \
     Assets/QML/qml.qrc \
-    Assets/Shaders/shaders.qrc
+    Assets/Shaders/shaders.qrc \
+    Assets/Models/models.qrc
 
 INCLUDEPATH += \
     Src \

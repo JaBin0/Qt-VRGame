@@ -3,6 +3,7 @@
 #include <QOpenGLContext>
 #include <QMatrix4x4>
 #include <QVector3D>
+#include <QVector>
 
 // System headers
 #include <iostream>
@@ -59,109 +60,42 @@ void GameRenderer::init(GameResourcesManager* const resMgrCallback, QQuickWindow
     }
     SysMethods::errorCheck(err);
 
-    // Load rest
-    m_triangle = new float[6] {
-                    -0.5, -0.5,
-                     0.0,  0.5,
-                     0.5, -0.5,
-                 };
 
-    m_cube = new float[216]  {
-                    // Front face
-                     0.5, -0.5,  -4.5, 1.0, 0.0, 0.0,
-                    -0.5, -0.5,  -3.5, 1.0, 0.0, 0.0,
-                     0.5, -0.5,  -3.5, 1.0, 0.0, 0.0,
-
-                     0.5, -0.5,  -4.5, 1.0, 0.0, 0.0,
-                    -0.5, -0.5,  -4.5, 1.0, 0.0, 0.0,
-                    -0.5, -0.5,  -3.5, 1.0, 0.0, 0.0,
-                    // Second face
-                    -0.5,  0.5,  -3.5, 0.0, 1.0, 0.0,
-                     0.5,  0.5,  -4.5, 0.0, 1.0, 0.0,
-                     0.5,  0.5,  -3.5, 0.0, 1.0, 0.0,
-
-                    -0.5,  0.5,  -3.5, 0.0, 1.0, 0.0,
-                    -0.5,  0.5,  -4.5, 0.0, 1.0, 0.0,
-                     0.5,  0.5,  -4.5, 0.0, 1.0, 0.0,
-                    // Third face
-                     0.5,  0.5,  -3.5, 0.0, 0.0, 1.0,
-                     0.5, -0.5,  -3.5, 0.0, 0.0, 1.0,
-                     0.5, -0.5,  -4.5, 0.0, 0.0, 1.0,
-
-                     0.5,  0.5,  -3.5, 0.0, 0.0, 1.0,
-                     0.5, -0.5,  -4.5, 0.0, 0.0, 1.0,
-                     0.5,  0.5,  -4.5, 0.0, 0.0, 1.0,
-                    // Fourth face
-                     0.5,  0.5,  -4.5, 1.0, 1.0, 0.0,
-                     0.5, -0.5,  -4.5, 1.0, 1.0, 0.0,
-                    -0.5, -0.5,  -4.5, 1.0, 1.0, 0.0,
-
-                     0.5,  0.5,  -4.5, 1.0, 1.0, 0.0,
-                    -0.5, -0.5,  -4.5, 1.0, 1.0, 0.0,
-                    -0.5,  0.5,  -4.5, 1.0, 1.0, 0.0,
-                    // Fifth face
-                    -0.5, -0.5,  -4.5, 1.0, 0.0, 1.0,
-                    -0.5,  0.5,  -3.5, 1.0, 0.0, 1.0,
-                    -0.5, -0.5,  -3.5, 1.0, 0.0, 1.0,
-
-                    -0.5,  0.5,  -3.5, 1.0, 0.0, 1.0,
-                    -0.5,  0.5,  -4.5, 1.0, 0.0, 1.0,
-                    -0.5, -0.5,  -4.5, 1.0, 0.0, 1.0,
-                    // Sixth face
-                     0.5, -0.5,  -3.5, 0.0, 1.0, 1.0,
-                    -0.5,  0.5,  -3.5, 0.0, 1.0, 1.0,
-                     0.5,  0.5,  -3.5, 0.0, 1.0, 1.0,
-
-                     0.5, -0.5,  -3.5, 0.0, 1.0, 1.0,
-                    -0.5, -0.5,  -3.5, 0.0, 1.0, 1.0,
-                    -0.5,  0.5,  -3.5, 0.0, 1.0, 1.0,
-                };
+    // Load models
+    QVector<float> modelData;
+    resMgrCallback->loadModel(":/Obj/Monkey.obj", modelData);
 
     glGenBuffers(1, &m_cubeVBO);
     glBindBuffer(GL_ARRAY_BUFFER, m_cubeVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 216, m_cube, GL_STATIC_DRAW);
-
-
-    glGenBuffers(1, &vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6, m_triangle, GL_STATIC_DRAW);
-    std::cout << sizeof(float) << std::endl;
-
-//    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
-//    glEnableVertexAttribArray(0);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * modelData.length(), modelData.data(), GL_STATIC_DRAW);
 }
 
 void GameRenderer::draw(GameContent*, QQuickWindow*)
 {
     uint currentProgram = m_shadersMap.value("Basic");
     glUseProgram(currentProgram);
-//    glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBindBuffer(GL_ARRAY_BUFFER, m_cubeVBO);
 
-//    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
-//    glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(2 * sizeof(float)));
     glEnableVertexAttribArray(1);
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));
+    glEnableVertexAttribArray(2);
 
     // Perspective Matrix
     glUniformMatrix4fv(glGetUniformLocation(currentProgram, "perspective"), 1, GL_FALSE, m_perspective.data());
 
     QMatrix4x4 lookAt;
     lookAt.setToIdentity();
-    lookAt.lookAt(QVector3D(4.0, 3.0, 3.0), QVector3D(0.0, 0.0, -4.0), QVector3D(0.0, 1.0, 0.0));
+    lookAt.lookAt(QVector3D(2.0, 2.0, 7.0), QVector3D(0.0, 0.0, 0.0), QVector3D(0.0, 1.0, 0.0));
     glUniformMatrix4fv(glGetUniformLocation(currentProgram, "lookAt"), 1, GL_FALSE, lookAt.data());
 
 
     glClearColor(0.2, 0.2, 0.2, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-//    glDrawArrays(GL_TRIANGLES, 0, 3);
-    //std::cout << "Draw End" << std::endl;
+    glDrawArrays(GL_TRIANGLES, 0, 2904);
 }
 
 uint GameRenderer::createGraphicPipline(const QString vertShaderSource, const QString fragShaderSource, uint& err) {
