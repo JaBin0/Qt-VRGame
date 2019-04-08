@@ -11,4 +11,5 @@ uniform highp mat4 lookAt;
 void main() {
     gl_Position = perspective * lookAt * vec4(vPos, 1.0);
     fColor = vNormal;
+    fText = vText;
 }

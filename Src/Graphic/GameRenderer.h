@@ -42,6 +42,8 @@ private:
     // Test texture
     uint m_texture;
 
+    // Size of the model
+    uint m_size;
 
     // Graphic pipline id
     uint m_programId;

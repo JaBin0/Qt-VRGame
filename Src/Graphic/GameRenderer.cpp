@@ -4,6 +4,7 @@
 #include <QMatrix4x4>
 #include <QVector3D>
 #include <QVector>
+#include <QGLWidget>
 
 // System headers
 #include <iostream>
@@ -63,30 +64,27 @@ void GameRenderer::init(GameResourcesManager* const resMgrCallback, QQuickWindow
 
     // Load models
     QVector<float> modelData;
-    resMgrCallback->loadModel(":/Obj/Cube.obj", modelData);
-//    for(auto val : modelData) {
-//    //    std::cout << val <<", ";
-//    }
+    resMgrCallback->loadModel(":/Obj/Monkey.obj", modelData);
+    m_size = modelData.length() / 8;
 
     glGenBuffers(1, &m_cubeVBO);
     glBindBuffer(GL_ARRAY_BUFFER, m_cubeVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(float) * modelData.length(), modelData.data(), GL_STATIC_DRAW);
 
     // Load Texture
-    QImage img(":/Cube.jpg");
-    std::cout <<"|" << std::endl;
-    std::cout << img.format()<<std::endl;
-    img = img.convertToFormat(QImage::Format_RGBA8888);
-    img.mirrored();
+    QImage img(":/default.png");
+    //img = img.mirrored(true,false);
+    img = QGLWidget::convertToGLFormat(img);
+
+    glEnable(GL_TEXTURE_2D);
     glGenTextures(1, &m_texture);
     glBindTexture(GL_TEXTURE_2D, m_texture);
-
-//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, img.width(), img.height(), 0, GL_RGB, GL_UNSIGNED_BYTE, img.bits());
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img.height(), img.width(), 0, GL_RGBA, GL_UNSIGNED_BYTE, img.bits());
     glGenerateMipmap(GL_TEXTURE_2D);
 }
 
@@ -96,12 +94,15 @@ void GameRenderer::draw(GameContent*, QQuickWindow*)
     glUseProgram(currentProgram);
     glBindBuffer(GL_ARRAY_BUFFER, m_cubeVBO);
 
-    //glBindTexture(GL_TEXTURE_2D, m_texture);
-    //glActiveTexture(GL_TEXTURE0);
+    // THIS IS HOW YOU ACTIVATE TEXTURE 0 !!!!! YOU STUPID BABUN
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, m_texture);
+    glUniform1i(glGetUniformLocation(currentProgram, "ourTexture"), 0);
+
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(2 * sizeof(float)));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));
     glEnableVertexAttribArray(2);
@@ -111,14 +112,13 @@ void GameRenderer::draw(GameContent*, QQuickWindow*)
 
     QMatrix4x4 lookAt;
     lookAt.setToIdentity();
-    lookAt.lookAt(QVector3D(2.0, 2.0, 1.0), QVector3D(0.0, 0.0, 0.0), QVector3D(0.0, 1.0, 0.0));
+    lookAt.lookAt(QVector3D(1.0, 2.0, 5.0), QVector3D(0.0, 0.0, 0.0), QVector3D(0.0, 1.0, 0.0));
     glUniformMatrix4fv(glGetUniformLocation(currentProgram, "lookAt"), 1, GL_FALSE, lookAt.data());
-
 
     glClearColor(0.2, 0.2, 0.2, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glDrawArrays(GL_TRIANGLES, 0, 2904);
+    glDrawArrays(GL_TRIANGLES, 0, m_size);
 }
 
 uint GameRenderer::createGraphicPipline(const QString vertShaderSource, const QString fragShaderSource, uint& err) {
