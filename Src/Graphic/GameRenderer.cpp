@@ -18,6 +18,12 @@
 #include <GameContent.h>
 #include <GameResourcesManager.h>
 
+#ifndef ANDROID
+    #define USE_ANDROID_SHADERS false
+#else
+    #define USE_ANDROID_SHADERS true
+#endif
+
 // Static variablesSHADERS_CFG_DESKTOP
 const QString GameRenderer::SHADERS_CFG_ANDROID = ":/Android/ShadersCfg.cfg";
 const QString GameRenderer::SHADERS_CFG_DESKTOP = ":/Desktop/ShadersCfg.cfg";
@@ -47,7 +53,7 @@ void GameRenderer::init(GameResourcesManager* const resMgrCallback, QQuickWindow
     // Load Shaders
     ShaderSourcMap shaderSrcMap;
     uint err = 0;
-    if(ANDROID) {
+    if(USE_ANDROID_SHADERS) {
         resMgrCallback->loadShaderSources(GameRenderer::SHADERS_CFG_ANDROID, shaderSrcMap);
     }
     else {
