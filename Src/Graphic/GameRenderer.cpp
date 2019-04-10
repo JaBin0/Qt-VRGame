@@ -95,7 +95,7 @@ void GameRenderer::init(GameResourcesManager* const resMgrCallback, QQuickWindow
     glGenerateMipmap(GL_TEXTURE_2D);
 }
 
-void GameRenderer::draw(GameContent*, QQuickWindow*)
+void GameRenderer::draw(GameContent* content, QQuickWindow*)
 {
     uint currentProgram = m_shadersMap.value("Basic");
     glUseProgram(currentProgram);

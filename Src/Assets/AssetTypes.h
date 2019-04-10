@@ -1,0 +1,9 @@
+#ifndef ASSETTYPES_H
+#define ASSETTYPES_H
+
+enum ASSET_TYPES {
+    BASIC = 0,
+    ASSETS_TYPES_COUTN
+};
+
+#endif // ASSETTYPES_H

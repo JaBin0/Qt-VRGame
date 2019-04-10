@@ -18,7 +18,8 @@ SOURCES += \
     Src/Main/GameContent.cpp \
     Src/Graphic/GameRenderer.cpp \
     Src/Assets/GameResourcesManager.cpp \
-    Src/Main/SysMethods.cpp
+    Src/Main/SysMethods.cpp \
+    Src/Assets/BasicAsset.cpp
 
 RESOURCES += \
     Assets/QML/qml.qrc \
@@ -51,7 +52,9 @@ HEADERS += \
     Src/Assets/GameResourcesManager.h \
     Src/Main/SystemTypes.h \
     Src/Main/SysMethods.h \
-    Src/Main/Config.h
+    Src/Main/Config.h \
+    Src/Assets/BasicAsset.h \
+    Src/Assets/AssetTypes.h
 
 DISTFILES +=
 

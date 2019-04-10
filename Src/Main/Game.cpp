@@ -34,6 +34,7 @@ void Game::init() {
 
     // Initial modules
     m_renderer->init(m_resourcesManager, m_window);
+    m_content->createScence();
     m_window->setClearBeforeRendering(false);
 }
 
