@@ -139,16 +139,17 @@ void GameResourcesManager::load_obj_model(QFile &model, QVector<float>& modelDat
                 modelData.append(vertexGeoData.y());
                 modelData.append(vertexGeoData.z());
 
-                int textureCoordIndex = vertexData.at(1).toInt() - 1;
-                QVector2D textureData = textureCoords.at(textureCoordIndex);
-                modelData.append(textureData.x());
-                modelData.append(textureData.y());
-
                 int normalCoordIndex = vertexData.at(2).toInt() - 1;
                 QVector3D normalData = normalsCoords.at(normalCoordIndex);
                 modelData.append(normalData.x());
                 modelData.append(normalData.y());
                 modelData.append(normalData.z());
+
+                int textureCoordIndex = vertexData.at(1).toInt() - 1;
+                QVector2D textureData = textureCoords.at(textureCoordIndex);
+                modelData.append(textureData.x());
+                modelData.append(textureData.y());
+
             }
         }
         else {

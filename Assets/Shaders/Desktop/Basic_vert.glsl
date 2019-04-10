@@ -1,6 +1,6 @@
 attribute vec3 vPos;
-attribute vec2 vText;
 attribute vec3 vNormal;
+attribute vec2 vText;
 
 varying vec3 fNormal;
 varying vec2 fText;

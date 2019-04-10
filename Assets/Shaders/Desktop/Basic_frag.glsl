@@ -1,6 +1,6 @@
 varying vec3 fNormal;
-varying vec2 fText;
 varying vec3 fPos;
+varying vec2 fText;
 
 uniform sampler2D ourTexture;
 
@@ -18,7 +18,7 @@ void main() {
 
     vec4 textureColor = texture2D(ourTexture, fText);
 
-    vec3 result = (ambient + diffuse) * textureColor;
+    vec3 result = (ambient + diffuse) * textureColor.rgb;
 
     gl_FragColor = vec4(result, 1.0);
 }

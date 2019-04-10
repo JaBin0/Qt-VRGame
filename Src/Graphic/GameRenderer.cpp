@@ -72,6 +72,7 @@ void GameRenderer::init(GameResourcesManager* const resMgrCallback, QQuickWindow
     QVector<float> modelData;
     resMgrCallback->loadModel(":/Obj/Monkey.obj", modelData);
     m_size = modelData.length() / 8;
+    std::cout << "Length: " << modelData.length() << ", " << m_size << std::endl;
 
     glGenBuffers(1, &m_cubeVBO);
     glBindBuffer(GL_ARRAY_BUFFER, m_cubeVBO);
@@ -108,10 +109,13 @@ void GameRenderer::draw(GameContent*, QQuickWindow*)
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));
+
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
     glEnableVertexAttribArray(2);
+
 
     // Perspective Matrix
     glUniformMatrix4fv(glGetUniformLocation(currentProgram, "perspective"), 1, GL_FALSE, m_perspective.data());
