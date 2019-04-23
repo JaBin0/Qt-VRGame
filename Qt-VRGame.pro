@@ -1,4 +1,4 @@
-QT += qml quick opengl
+QT += qml quick opengl xml
 CONFIG += c++14
 
 # The following define makes your compiler emit warnings if you use
@@ -15,23 +15,19 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     Src/main.cpp \
     Src/Main/Game.cpp \
-    Src/Main/GameContent.cpp \
-    Src/Graphic/GameRenderer.cpp \
-    Src/Assets/GameResourcesManager.cpp \
-    Src/Main/SysMethods.cpp \
-    Src/Assets/BasicAsset.cpp
+    Src/Resources/GameRscManager.cpp \
+    Src/Resources/System/Asset.cpp \
+    Src/Graphic/GameRenderer.cpp
 
 RESOURCES += \
-    Assets/QML/qml.qrc \
-    Assets/Shaders/shaders.qrc \
-    Assets/Models/models.qrc \
-    Assets/Textures/textures.qrc
+    Assets/assets.qrc
 
 INCLUDEPATH += \
     Src \
     Src/Main \
     Src/Graphic \
-    Src/Assets \
+    Src/Resources \
+    Src/Resources/System \
 
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
@@ -47,14 +43,13 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     Src/Main/Game.h \
-    Src/Main/GameContent.h \
-    Src/Graphic/GameRenderer.h \
-    Src/Assets/GameResourcesManager.h \
-    Src/Main/SystemTypes.h \
-    Src/Main/SysMethods.h \
-    Src/Main/Config.h \
-    Src/Assets/BasicAsset.h \
-    Src/Assets/AssetTypes.h
+    Src/Resources/GameRscManager.h \
+    Src/Resources/AssetRsources.h \
+    Src/Resources/System/DaeTagsDictionary.h \
+    Src/Resources/System/Asset.h \
+    Src/Graphic/GraphicTypes.h \
+    Src/Resources/System/ResourcesTypes.h \
+    Src/Graphic/GameRenderer.h
 
 DISTFILES +=
 

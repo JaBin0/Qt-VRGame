@@ -8,12 +8,11 @@ Item {
 
     Game {
         id: game
-
     }
-
 
     Rectangle {
         id: blue;
+
         color: Qt.rgba(0.1, 0.1, 0.4, 1.0)
         anchors.bottom: root.bottom
         anchors.left: root.left

@@ -1,63 +1,56 @@
 // Qt headers
 #include <QQuickWindow>
-
-// System headers
-#include <iostream>
-
 // Own headers
 #include <Game.h>
 #include <GameRenderer.h>
-#include <GameContent.h>
-#include <GameResourcesManager.h>
+#include <GameRscManager.h>
+
+// Static variables
+const QString Game::LEVEL_FILE_PATH = ":/Assets/Levels/Scene.dae";
 
 Game::Game()
-    : m_renderer {nullptr}
-    , m_content {nullptr}
-    , m_resourcesManager {nullptr}
-    , m_window {nullptr}
+    : m_rscManager {nullptr}
 {
     connect(this, &QQuickItem::windowChanged, this, &Game::onWindowChanged);
 }
 
 Game::~Game() {
-    std::cout << "Game::Destructor" << std::endl;
-    delete m_resourcesManager;
-    delete m_renderer;
-    delete m_content;
-}
-
-void Game::init() {
-    // Create game modules
-    m_content = new GameContent();
-    m_renderer = new GameRenderer();
-    m_resourcesManager = new GameResourcesManager();
-
-    // Initial modules
-    m_renderer->init(m_resourcesManager, m_window);
-    m_content->createScence();
-    m_window->setClearBeforeRendering(false);
-}
-
-void Game::drawGame() {
-    //std::cout << "Draw game frame" << std::endl;
-    m_renderer->draw(m_content, m_window);
-
-    m_window->update();
+    delete m_rscManager;
 }
 
 void Game::onWindowChanged(QQuickWindow *window) {
-    m_window = window;
     if(nullptr != window) {
-        connect(m_window, &QQuickWindow::sceneGraphInitialized, this, &Game::init, Qt::DirectConnection);
-        connect(m_window, &QQuickWindow::beforeRendering, this, &Game::drawGame, Qt::DirectConnection);
-        connect(m_window, &QQuickWindow::widthChanged, this, &Game::onWindowSizeChanged);
-        connect(m_window, &QQuickWindow::heightChanged, this, &Game::onWindowSizeChanged);
-
+        connect(window, &QQuickWindow::widthChanged, this, &Game::onWindowSizeChanged);
+        connect(window, &QQuickWindow::heightChanged, this, &Game::onWindowSizeChanged);
+        connect(window, &QQuickWindow::sceneGraphInitialized, this, &Game::init, Qt::DirectConnection);
+        connect(window, &QQuickWindow::beforeRendering, this, &Game::drawFrame, Qt::DirectConnection);
     }
 }
 
 void Game::onWindowSizeChanged(int) {
-    // Get current window size and adjust viewport
-    QSize size = m_window->size();
-    // TO DO - Adjust viewport
+    // In future adjast viewPort
+    // window() <- return QSize of the connected window
+}
+
+void Game::init() {
+    // Disable automatic clearing of openGL context so the content of the custom frame will be visible
+    window()->setClearBeforeRendering(false);
+
+    // Initialize all components
+    m_rscManager = new GameRscManager();
+    m_renderer = new GameRenderer(window());
+
+    // Load content of the game
+    RSC_ERROR err;
+    ModelTemplate* modelTmp = m_rscManager->loadModel_Dae(":/Assets/Models/dae/Crate.dae", err);
+    m_renderer->createModel(modelTmp);
+    m_renderer->deleteModelTemplate(modelTmp);
+    auto* shaderMap = m_rscManager->loadShaderSources(":/Assets/Shaders/Desktop/ShadersCfg.cfg");
+    m_renderer->initShaders(shaderMap);
+
+//    m_rscManager->load_Scene(LEVEL_FILE_PATH);
+}
+
+void Game::drawFrame() {
+    m_renderer->renderFrame("Crate");
 }

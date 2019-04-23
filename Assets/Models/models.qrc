@@ -3,5 +3,6 @@
         <file>Obj/Monkey.obj</file>
         <file>Obj/Cube.obj</file>
         <file>Obj/Plane.obj</file>
+        <file>Scene.dae</file>
     </qresource>
 </RCC>

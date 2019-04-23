@@ -1,0 +1,21 @@
+<RCC>
+    <qresource prefix="/Assets">
+        <file>Levels/Scene.dae</file>
+        <file>Models/dae/Ground.dae</file>
+        <file>QML/main.qml</file>
+        <file>Textures/Ground.jpg</file>
+        <file>Shaders/Android/Basic_frag.glsl</file>
+        <file>Shaders/Android/Basic_vert.glsl</file>
+        <file>Shaders/Android/ShadersCfg.cfg</file>
+        <file>Shaders/Desktop/Basic_frag.glsl</file>
+        <file>Shaders/Desktop/Basic_vert.glsl</file>
+        <file>Shaders/Desktop/ShadersCfg.cfg</file>
+        <file>Models/dae/Crate.dae</file>
+        <file>Textures/WoodPlanks.jpg</file>
+    </qresource>
+    <qresource prefix="/">
+        <file>Shaders/Desktop/Basic_frag.glsl</file>
+        <file>Shaders/Desktop/Basic_vert.glsl</file>
+        <file>Shaders/Desktop/ShadersCfg.cfg</file>
+    </qresource>
+</RCC>

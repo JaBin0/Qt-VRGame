@@ -1,73 +1,44 @@
 #ifndef GAME_H
 #define GAME_H
-
 // Qt headers
 #include <QtQuick/QQuickItem>
-#include <QtGui/QOpenGLShaderProgram>
 #include <QtGui/QOpenGLFunctions>
 
-// Own headers
-
 // Forward declaration
-class QQuickWindow;
 class GameRenderer;
-class GameContent;
-class GameResourcesManager;
+class GameRscManager;
 
-class Game : public QQuickItem
-{
-    Q_OBJECT
-//    Q_PROPERTY(qreal t READ t WRITE setT NOTIFY tChanged)
+class Game : public QQuickItem {
 
 public:
-    // Constructors & Destructor
+    // Constructors && Destructor
     Game();
     ~Game();
 
-private slots:
-    // Initialize Game module
-    void init();
-
-    // Draw one full frame of the game
-    void drawGame();
-
-    // Slots invoke when window connected to the game changed
+protected slots:
+    // Reaction to the window change singal
     void onWindowChanged(QQuickWindow* window);
 
-    // Handle change of the main window size
+    // Reaction to the change of the window size hight and width
     void onWindowSizeChanged(int);
 
+    // Method which will be called when openGL context, of the window will be initialized,
+    // This is method which will actualy initialize whole game
+    void init();
 
+    // Process one frame drawing
+    void drawFrame();
 
-private: // Atributes
-    // Handler for the game renderer
+protected: // Members
+    // Resource manager
+    GameRscManager* m_rscManager;
+
+    // Graphic renderer
     GameRenderer* m_renderer;
 
-    // Content of the game
-    GameContent* m_content;
+    // Path to the default game scne file
+    static const QString LEVEL_FILE_PATH;
 
-    // Game resources manager;
-    GameResourcesManager* m_resourcesManager;
-
-    // Main window handler
-    QQuickWindow *m_window;
-
-
-//    qreal t() const { return m_t; }
-//    void setT(qreal t);
-//signals:
-//    void tChanged();
-
-//public slots:
-//    void sync();
-//    void cleanup();
-
-//private slots:
-//    void handleWindowChanged(QQuickWindow *win);
-
-//private:
-//    qreal m_t;
-//    SquircleRenderer *m_renderer;
 };
 
 #endif // GAME_H

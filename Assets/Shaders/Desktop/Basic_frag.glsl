@@ -2,7 +2,7 @@ varying vec3 fNormal;
 varying vec3 fPos;
 varying vec2 fText;
 
-uniform sampler2D ourTexture;
+uniform sampler2D sampler;
 
 void main() {
     vec3 lightPos = vec3(3.0, 3.0, 3.0);
@@ -16,7 +16,7 @@ void main() {
     float diff = max(dot(norm, lightDir), 0.0);
     vec3 diffuse = diff * lightColor;
 
-    vec4 textureColor = texture2D(ourTexture, fText);
+    vec4 textureColor = texture2D(sampler, fText);
 
     vec3 result = (ambient + diffuse) * textureColor.rgb;
 

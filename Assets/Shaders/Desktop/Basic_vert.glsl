@@ -6,11 +6,12 @@ varying vec3 fNormal;
 varying vec2 fText;
 varying vec3 fPos;
 
-uniform mat4 perspective;
+uniform mat4 transform;
 uniform mat4 lookAt;
+uniform mat4 perspective;
 
 void main() {
-    gl_Position = perspective * lookAt * vec4(vPos, 1.0);
+    gl_Position = perspective * lookAt * transform * vec4(vPos, 1.0);
     fPos = vPos;
     fNormal = vNormal;
     fText = vText;
