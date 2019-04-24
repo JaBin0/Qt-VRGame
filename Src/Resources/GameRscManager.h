@@ -30,7 +30,7 @@ public:
     QMap<QString, QPair<QString, QString>>* loadShaderSources(const QString configPath);
 
     // load and parse scene file
-   RSC_ERROR load_Scene(const QString filePath);
+    QList<ContentPart*>* load_Scene(const QString filePath);
 
    // Check if model is already in resources, in case of no load it to the game
    RSC_ERROR load_DaeModel(const Asset::MODEL_ID id);

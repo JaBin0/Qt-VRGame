@@ -6,7 +6,7 @@
 // Own headers
 #include <Game.h>
 
-const std::string version = "alpha v0.08";
+const std::string version = "alpha v0.09";
 const std::string title = "Qt-VRGame";
 
 int main(int argc, char *argv[])

@@ -172,12 +172,34 @@ QDomDocument *GameRscManager::load_XmlFile(const QString filePath) {
     return xmlDoc;
 }
 
-
+QList<ContentPart*>* GameRscManager::load_Scene(const QString filePath) {
+    auto* list = new QList<ContentPart*>();
+    QDomDocument* daeDoc = load_XmlFile(filePath);
+    if(nullptr != daeDoc) {
+        std::cout << "Loading scne" << std::endl;
+        QDomElement visual_scene = daeDoc->documentElement().firstChildElement("library_visual_scenes").firstChildElement("visual_scene");
+        if(visual_scene.isNull()) {
+            std::cout << "No library_visual_scenes::visual_scene node" << std::endl;
+            return nullptr;
+        }
+        QDomNodeList nodes = visual_scene.childNodes();
+        for(auto idx = 0; idx < nodes.length(); ++idx) {
+            QDomElement node = nodes.at(idx).toElement();
+            QString id = node.attribute("id");
+            QVector<float> dataVector;
+            for(auto data : node.firstChildElement("matrix").firstChild().nodeValue().split(" ")) {
+                dataVector.push_back(data.toFloat());
+            };
+            list->push_back(new ContentPart{id, new QMatrix4x4(dataVector.data())});
+        }
+    }
+    return list;
+}
 
 
 // ======================================================================================
 
-RSC_ERROR GameRscManager::load_Scene(const QString filePath) {
+//RSC_ERROR GameRscManager::load_Scene(const QString filePath) {
 //    // TODO: Add system of loading ... success marker
 //    QDomDocument sceneDoc("Scene");
 //    QFile sceneFile (filePath);
@@ -210,9 +232,9 @@ RSC_ERROR GameRscManager::load_Scene(const QString filePath) {
 //    }
 
 
-//    sceneFile.close();
-    return RSC_ERROR::NO_ERR;
-}
+////    sceneFile.close();
+//    return RSC_ERROR::NO_ERR;
+//}
 
 RSC_ERROR GameRscManager::load_DaeModel(const Asset::MODEL_ID id) {
 //    // TODO check if model loaded

@@ -12,10 +12,15 @@
         <file>Shaders/Desktop/ShadersCfg.cfg</file>
         <file>Models/dae/Crate.dae</file>
         <file>Textures/WoodPlanks.jpg</file>
-    </qresource>
-    <qresource prefix="/">
-        <file>Shaders/Desktop/Basic_frag.glsl</file>
-        <file>Shaders/Desktop/Basic_vert.glsl</file>
-        <file>Shaders/Desktop/ShadersCfg.cfg</file>
+        <file>Textures/Ice.jpg</file>
+        <file>Textures/Front.jpg</file>
+        <file>Textures/Ball.jpg</file>
+        <file>Models/dae/Cilinder.dae</file>
+        <file>Models/dae/Sphere.dae</file>
+        <file>Textures/Front.png</file>
+        <file>Models/dae/Piramid.dae</file>
+        <file>Textures/Cube.png</file>
+        <file>Textures/test.jpg</file>
+        <file>Textures/Brick.jpg</file>
     </qresource>
 </RCC>

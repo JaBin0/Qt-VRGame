@@ -26,5 +26,9 @@ struct Model {
     QMatrix4x4* trans;
 };
 
+struct ContentPart {
+    QString id;
+    QMatrix4x4* trans;
+};
 
 #endif // GRAPHICTYPES_H

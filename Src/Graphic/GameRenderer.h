@@ -33,7 +33,10 @@ public:
 //    void draw(GameContent* content, QQuickWindow* window);
 
     // Render frame based on the given content
-    void renderFrame(QString modelName);
+    void renderFrame(QList<ContentPart*>* content);
+
+    // Render frame based on the given content
+    void renderObject(QString modelName);
 
     // Delete model template information
     void deleteModelTemplate(ModelTemplate* model);

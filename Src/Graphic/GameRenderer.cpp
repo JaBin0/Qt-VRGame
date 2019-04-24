@@ -48,7 +48,9 @@ GameRenderer::GameRenderer(QQuickWindow* window)
 
     // Enable basic opengl features
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
     glEnable(GL_TEXTURE_2D);
+
 
     std::cout << "GameRenderer::Constructor" << std::endl;
 }
@@ -74,7 +76,55 @@ void GameRenderer::initShaders(QMap<QString, QPair<QString, QString> > *shaderSo
     }
 }
 
-void GameRenderer::renderFrame(QString modelName) {
+void GameRenderer::renderFrame(QList<ContentPart *> *content) {
+    glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    uint currentProgram = shaders.value("Basic");
+    glUseProgram(currentProgram);
+
+    // Perspective Matrix
+    glUniformMatrix4fv(glGetUniformLocation(currentProgram, "perspective"), 1, GL_FALSE, m_perspective.data());
+
+    // Camera Matrix
+    QMatrix4x4 lookAt;
+    lookAt.setToIdentity();
+    lookAt.lookAt(QVector3D(5.0, 5.0, 15.0), QVector3D(0.0, 0.0, 0.0), QVector3D(0.0, 1.0, 0.0));
+    glUniformMatrix4fv(glGetUniformLocation(currentProgram, "lookAt"), 1, GL_FALSE, lookAt.data());
+
+    for(auto obj : *content) {
+        if(0 != models.count(obj->id)) {
+            std::cout << "ID: " << obj->id.toUtf8().constData() << std::endl;
+            const Model* model = models.value(obj->id);
+            glBindBuffer(GL_ARRAY_BUFFER, model->vbo);
+
+            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+            glEnableVertexAttribArray(0);
+
+            glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+            glEnableVertexAttribArray(1);
+
+            glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+            glEnableVertexAttribArray(2);
+
+            // THIS IS HOW YOU ACTIVATE TEXTURE 0 !!!!! YOU STUPID BABUN
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, model->textureId);
+            glUniform1i(glGetUniformLocation(currentProgram, "sampler"), 0);
+
+            // Update uniforms
+            // Transformation matrix external
+            glUniformMatrix4fv(glGetUniformLocation(currentProgram, "transformExt"), 1, GL_FALSE, obj->trans->data());
+
+            // Update uniforms
+            // Transformation matrix internal
+            glUniformMatrix4fv(glGetUniformLocation(currentProgram, "transformInt"), 1, GL_FALSE, model->trans->data());
+
+            glDrawArrays(GL_TRIANGLES, 0, model->size);
+        }
+    }
+}
+
+void GameRenderer::renderObject(QString modelName) {
     glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -108,7 +158,7 @@ void GameRenderer::renderFrame(QString modelName) {
     // Camera Matrix
     QMatrix4x4 lookAt;
     lookAt.setToIdentity();
-    lookAt.lookAt(QVector3D(0.0, 2.0, 5.0), QVector3D(0.0, 0.0, 0.0), QVector3D(0.0, 1.0, 0.0));
+    lookAt.lookAt(QVector3D(5.0, 5.0, 15.0), QVector3D(0.0, 0.0, 0.0), QVector3D(0.0, 1.0, 0.0));
     glUniformMatrix4fv(glGetUniformLocation(currentProgram, "lookAt"), 1, GL_FALSE, lookAt.data());
 
     glDrawArrays(GL_TRIANGLES, 0, model->size);
@@ -179,7 +229,7 @@ void GameRenderer::deleteModelTemplate(ModelTemplate *model) {
 
 void GameRenderer::setViewPort(QSize size) {
     glViewport(0, 0, size.width(), size.height());
-    m_perspective.perspective(45, (double(size.width())/double(size.height())), 0.1, 100.0);
+    m_perspective.perspective(45, (double(size.width())/double(size.height())), 0.1, 1000.0);
 }
 
 uint GameRenderer::createTexture(const QString textureName) {
@@ -191,11 +241,11 @@ uint GameRenderer::createTexture(const QString textureName) {
     glBindTexture(GL_TEXTURE_2D, textureId);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img.height(), img.width(), 0, GL_RGBA, GL_UNSIGNED_BYTE, img.bits());
-    glGenerateMipmap(GL_TEXTURE_2D);
+   // glGenerateMipmap(GL_TEXTURE_2D);
 
     return textureId;
 }

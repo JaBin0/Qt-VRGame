@@ -1,5 +1,7 @@
 // Qt headers
 #include <QQuickWindow>
+// System headers
+#include <iostream>
 // Own headers
 #include <Game.h>
 #include <GameRenderer.h>
@@ -42,15 +44,30 @@ void Game::init() {
 
     // Load content of the game
     RSC_ERROR err;
-    ModelTemplate* modelTmp = m_rscManager->loadModel_Dae(":/Assets/Models/dae/Crate.dae", err);
-    m_renderer->createModel(modelTmp);
-    m_renderer->deleteModelTemplate(modelTmp);
-    auto* shaderMap = m_rscManager->loadShaderSources(":/Assets/Shaders/Desktop/ShadersCfg.cfg");
-    m_renderer->initShaders(shaderMap);
+    ModelTemplate* modelTmp1 = m_rscManager->loadModel_Dae(":/Assets/Models/dae/Ground.dae", err);
+    m_renderer->createModel(modelTmp1);
+    m_renderer->deleteModelTemplate(modelTmp1);
+    ModelTemplate* modelTmp2 = m_rscManager->loadModel_Dae(":/Assets/Models/dae/Cilinder.dae", err);
+    m_renderer->createModel(modelTmp2);
+    m_renderer->deleteModelTemplate(modelTmp2);
+    ModelTemplate* modelTmp3 = m_rscManager->loadModel_Dae(":/Assets/Models/dae/Crate.dae", err);
+    m_renderer->createModel(modelTmp3);
+    m_renderer->deleteModelTemplate(modelTmp3);
+    ModelTemplate* modelTmp4 = m_rscManager->loadModel_Dae(":/Assets/Models/dae/Piramid.dae", err);
+    m_renderer->createModel(modelTmp4);
+    m_renderer->deleteModelTemplate(modelTmp4);
+    ModelTemplate* modelTmp5 = m_rscManager->loadModel_Dae(":/Assets/Models/dae/Sphere.dae", err);
+    m_renderer->createModel(modelTmp5);
+    m_renderer->deleteModelTemplate(modelTmp5);
 
-//    m_rscManager->load_Scene(LEVEL_FILE_PATH);
+    auto* shaderMap = m_rscManager->loadShaderSources(":/Assets/Shaders/Desktop/ShadersCfg.cfg");
+
+    m_renderer->initShaders(shaderMap);
+    std::cout << "hello" << std::endl;
+    pContent = m_rscManager->load_Scene(LEVEL_FILE_PATH);
 }
 
 void Game::drawFrame() {
-    m_renderer->renderFrame("Crate");
+    m_renderer->renderFrame(pContent);
+   // m_renderer->renderObject("Cone");
 }

@@ -3,6 +3,8 @@
 // Qt headers
 #include <QtQuick/QQuickItem>
 #include <QtGui/QOpenGLFunctions>
+// Own header
+#include <GraphicTypes.h>
 
 // Forward declaration
 class GameRenderer;
@@ -38,6 +40,8 @@ protected: // Members
 
     // Path to the default game scne file
     static const QString LEVEL_FILE_PATH;
+
+    QList<ContentPart*>* pContent;
 
 };
 
