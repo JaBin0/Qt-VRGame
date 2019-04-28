@@ -15,7 +15,7 @@ const QString Game::LEVEL_FILE_PATH = ":/Assets/Levels/Scene.dae";
 #else
     const QString Game::SHADERS_PATH = ":/Assets/Shaders/Android/ShadersCfg.cfg";
 #endif
-
+//":/Assets/Shaders/Android/ShadersCfg.cfg"
 Game::Game()
     : m_rscManager {nullptr}
 {
@@ -66,7 +66,7 @@ void Game::init() {
     m_renderer->createModel(modelTmp5);
     m_renderer->deleteModelTemplate(modelTmp5);
 
-    auto* shaderMap = m_rscManager->loadShaderSources(":/Assets/Shaders/Android/ShadersCfg.cfg");
+    auto* shaderMap = m_rscManager->loadShaderSources(SHADERS_PATH);
 
     m_renderer->initShaders(shaderMap);
     std::cout << "hello" << std::endl;
