@@ -110,15 +110,6 @@ void GameRenderer::renderFrame(QList<ContentPart *> *content) {
             glVertexAttribPointer(tex, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
             glEnableVertexAttribArray(tex);
 
-//              glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-//              glEnableVertexAttribArray(0);
-
-//              glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-//              glEnableVertexAttribArray(1);
-
-//              glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-//              glEnableVertexAttribArray(2);
-
             // THIS IS HOW YOU ACTIVATE TEXTURE 0 !!!!! YOU STUPID BABUN
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, model->textureId);
@@ -126,7 +117,7 @@ void GameRenderer::renderFrame(QList<ContentPart *> *content) {
 
             // Update uniforms
             // Transformation matrix external
-            //glUniformMatrix4fv(glGetUniformLocation(currentProgram, "transformExt"), 1, GL_FALSE, obj->trans->data());
+            glUniformMatrix4fv(glGetUniformLocation(currentProgram, "transExt"), 1, GL_FALSE, obj->trans->data());
 
             // Update uniforms
             // Transformation matrix internal
