@@ -51,7 +51,6 @@ GameRenderer::GameRenderer(QQuickWindow* window)
     glEnable(GL_BLEND);
     glEnable(GL_TEXTURE_2D);
 
-
     std::cout << "GameRenderer::Constructor" << std::endl;
 }
 
@@ -186,6 +185,47 @@ void GameRenderer::renderObject(QString modelName) {
     glDrawArrays(GL_TRIANGLES, 0, model->size);
 }
 
+void GameRenderer::renderUI() {
+    static uint vbo = -1u;
+    if(vbo == -1u) {
+        QVector<float> data = {
+            0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f,
+            0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f
+        };
+
+        glGenBuffers(1, &vbo);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(float) * static_cast<uint>(data.length()), data.data(), GL_STATIC_DRAW);
+    }
+
+    QMatrix4x4 trans;
+    trans.translate(1080.0f, 620.0f);
+    trans.scale(200.0f, 100.0f);
+
+    float* data = trans.data();
+    for (auto idx = 0; idx < 16; ++idx) {
+        std::cout << *(data+idx) << ", ";
+    }
+    std::cout << std::endl;
+
+
+    glDisable(GL_DEPTH_TEST);
+    uint currentProgram = shaders.value("Ortho");
+    glUseProgram(currentProgram);
+
+    // Perspective Matrix
+    glUniformMatrix4fv(glGetUniformLocation(currentProgram, "ort"), 1, GL_FALSE, m_ortho.data());
+    glUniformMatrix4fv(glGetUniformLocation(currentProgram, "transform"), 1, GL_FALSE, trans.data());
+
+    int pos = glGetAttribLocation(currentProgram, "vPos");
+    glVertexAttribPointer(pos, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(pos);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glEnable(GL_DEPTH_TEST);
+}
+
 void GameRenderer::deleteModelTemplate(ModelTemplate *model) {
     delete model->data;
     delete model->trans;
@@ -252,6 +292,7 @@ void GameRenderer::deleteModelTemplate(ModelTemplate *model) {
 void GameRenderer::setViewPort(QSize size) {
     glViewport(0, 0, size.width(), size.height());
     m_perspective.perspective(45, (double(size.width())/double(size.height())), 0.1, 1000.0);
+    m_ortho.ortho(0.0f, 1280.0f, 0.0f, 720.0f, -100.0f, 100.f);
 }
 
 uint GameRenderer::createTexture(const QString textureName) {
@@ -283,7 +324,8 @@ uint GameRenderer::createVBO(QVector<float> *data) {
 uint GameRenderer::createGraphicPipline(const QString vertShaderSource, const QString fragShaderSource, uint& err) {
     int success = 0;
     char infoLog[512];
-
+    std::cout << "vertShaderSource: \n" << vertShaderSource.toUtf8().constData() << std::endl;
+    std::cout << "fragShaderSource: \n" << fragShaderSource.toUtf8().constData() << std::endl;
     // Create Vertex Shader
     const char* vertShaderSourceStart = vertShaderSource.toUtf8().constData();
     uint vertexShaderId = glCreateShader(GL_VERTEX_SHADER);

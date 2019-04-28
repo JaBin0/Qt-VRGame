@@ -10,24 +10,24 @@ Item {
         id: game
     }
 
-    Rectangle {
-        id: blue;
+//    Rectangle {
+//        id: blue;
 
-        color: Qt.rgba(0.1, 0.1, 0.4, 1.0)
-        anchors.bottom: root.bottom
-        anchors.left: root.left
-        anchors.right: red.left
+//        color: Qt.rgba(0.1, 0.1, 0.4, 1.0)
+//        anchors.bottom: root.bottom
+//        anchors.left: root.left
+//        anchors.right: red.left
 
-        height: 50
-        width: 100
-    }
+//        height: 50
+//        width: 100
+//    }
 
-    Rectangle {
-        id: red;
-        color: Qt.rgba(0.4, 0.1, 0.1, 1.0)
-        anchors.top: blue.top
-        anchors.bottom: root.bottom
-        anchors.right: root.right
-        anchors.left: blue.right
-    }
+//    Rectangle {
+//        id: red;
+//        color: Qt.rgba(0.4, 0.1, 0.1, 1.0)
+//        anchors.top: blue.top
+//        anchors.bottom: root.bottom
+//        anchors.right: root.right
+//        anchors.left: blue.right
+//    }
 }

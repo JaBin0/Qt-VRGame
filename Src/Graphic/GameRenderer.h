@@ -38,6 +38,9 @@ public:
     // Render frame based on the given content
     void renderObject(QString modelName);
 
+    // Render part of the screen UI
+    void renderUI();
+
     // Delete model template information
     void deleteModelTemplate(ModelTemplate* model);
 
@@ -58,6 +61,9 @@ protected:
 private:
     // Perspective matirx
     QMatrix4x4 m_perspective;
+
+    // Orthogonometic matrix
+    QMatrix4x4 m_ortho;
 
     // List of supported models
     QMap<QString, Model*> models;

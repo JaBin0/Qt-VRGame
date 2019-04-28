@@ -51,5 +51,6 @@ HEADERS += \
     Src/Resources/System/ResourcesTypes.h \
     Src/Graphic/GameRenderer.h
 
-DISTFILES +=
+DISTFILES += \
+    Assets/Shaders/Desktop/ortho_vert.vsh
 

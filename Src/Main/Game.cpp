@@ -75,5 +75,6 @@ void Game::init() {
 
 void Game::drawFrame() {
     m_renderer->renderFrame(pContent);
+    m_renderer->renderUI();
     //m_renderer->renderObject("Cone");
 }

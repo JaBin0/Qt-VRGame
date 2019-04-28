@@ -22,5 +22,7 @@
         <file>Textures/Cube.png</file>
         <file>Textures/test.jpg</file>
         <file>Textures/Brick.jpg</file>
+        <file>Shaders/Desktop/Ortho_frag.glsl</file>
+        <file>Shaders/Desktop/Ortho_vert.glsl</file>
     </qresource>
 </RCC>
