@@ -19,8 +19,5 @@ void main() {
     vec4 textureColor = texture2D(sampler, fText);
 
     vec3 result = (ambient + diffuse) * textureColor.rgb;
-
-    //gl_FragColor = vec4(result, 1.0);
-    gl_FragColor = vec4(textureColor.rgb, 1.0);
-
+    gl_FragColor = vec4(result.rgb, 1.0);
 }

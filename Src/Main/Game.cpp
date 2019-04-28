@@ -10,6 +10,12 @@
 // Static variables
 const QString Game::LEVEL_FILE_PATH = ":/Assets/Levels/Scene.dae";
 
+#ifndef ANDROID
+    const QString Game::SHADERS_PATH = ":/Assets/Shaders/Desktop/ShadersCfg.cfg";
+#else
+    const QString Game::SHADERS_PATH = ":/Assets/Shaders/Android/ShadersCfg.cfg";
+#endif
+
 Game::Game()
     : m_rscManager {nullptr}
 {
@@ -60,7 +66,7 @@ void Game::init() {
     m_renderer->createModel(modelTmp5);
     m_renderer->deleteModelTemplate(modelTmp5);
 
-    auto* shaderMap = m_rscManager->loadShaderSources(":/Assets/Shaders/Desktop/ShadersCfg.cfg");
+    auto* shaderMap = m_rscManager->loadShaderSources(":/Assets/Shaders/Android/ShadersCfg.cfg");
 
     m_renderer->initShaders(shaderMap);
     std::cout << "hello" << std::endl;
@@ -69,5 +75,5 @@ void Game::init() {
 
 void Game::drawFrame() {
     m_renderer->renderFrame(pContent);
-   // m_renderer->renderObject("Cone");
+    //m_renderer->renderObject("Cone");
 }

@@ -41,6 +41,8 @@ protected: // Members
     // Path to the default game scne file
     static const QString LEVEL_FILE_PATH;
 
+    static const QString SHADERS_PATH;
+
     QList<ContentPart*>* pContent;
 
 };

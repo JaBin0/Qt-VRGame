@@ -1,8 +1,8 @@
 varying highp vec3 fNormal;
-varying highp vec2 fText;
 varying highp vec3 fPos;
+varying highp vec2 fText;
 
-uniform sampler2D ourTexture[1];
+uniform sampler2D sampler[1];
 
 void main() {
     highp vec3 lightPos = vec3(3.0, 3.0, 3.0);
@@ -16,8 +16,9 @@ void main() {
     highp float diff = max(dot(norm, lightDir), 0.0);
     highp vec3 diffuse = diff * lightColor;
 
-    highp vec4 textureColor = texture2D(ourTexture[0], fText);
+    highp vec4 textureColor = texture2D(sampler[0], fText);
     highp vec3 result = (ambient + diffuse) * textureColor.rgb;
 
     gl_FragColor = vec4(result, 1.0);
 }
+

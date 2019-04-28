@@ -93,18 +93,31 @@ void GameRenderer::renderFrame(QList<ContentPart *> *content) {
 
     for(auto obj : *content) {
         if(0 != models.count(obj->id)) {
-            std::cout << "ID: " << obj->id.toUtf8().constData() << std::endl;
+            std::cout << "ID: " << obj->id.toUtf8().
+                         constData() << std::endl;
             const Model* model = models.value(obj->id);
             glBindBuffer(GL_ARRAY_BUFFER, model->vbo);
 
-            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-            glEnableVertexAttribArray(0);
+            int pos = glGetAttribLocation(currentProgram, "vPos");
+            int normal = glGetAttribLocation(currentProgram, "vNormal");
+            int tex = glGetAttribLocation(currentProgram, "vText");
+            glVertexAttribPointer(pos, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+            glEnableVertexAttribArray(pos);
 
-            glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-            glEnableVertexAttribArray(1);
+            glVertexAttribPointer(normal, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+            glEnableVertexAttribArray(normal);
 
-            glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-            glEnableVertexAttribArray(2);
+            glVertexAttribPointer(tex, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+            glEnableVertexAttribArray(tex);
+
+//              glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+//              glEnableVertexAttribArray(0);
+
+//              glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+//              glEnableVertexAttribArray(1);
+
+//              glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+//              glEnableVertexAttribArray(2);
 
             // THIS IS HOW YOU ACTIVATE TEXTURE 0 !!!!! YOU STUPID BABUN
             glActiveTexture(GL_TEXTURE0);
@@ -113,7 +126,7 @@ void GameRenderer::renderFrame(QList<ContentPart *> *content) {
 
             // Update uniforms
             // Transformation matrix external
-            glUniformMatrix4fv(glGetUniformLocation(currentProgram, "transformExt"), 1, GL_FALSE, obj->trans->data());
+            //glUniformMatrix4fv(glGetUniformLocation(currentProgram, "transformExt"), 1, GL_FALSE, obj->trans->data());
 
             // Update uniforms
             // Transformation matrix internal
@@ -134,14 +147,27 @@ void GameRenderer::renderObject(QString modelName) {
     glUseProgram(currentProgram);
     glBindBuffer(GL_ARRAY_BUFFER, model->vbo);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
+    int pos = glGetAttribLocation(currentProgram, "vPos");
+    int normal = glGetAttribLocation(currentProgram, "vNormal");
+    int tex = glGetAttribLocation(currentProgram, "vText");
+    glVertexAttribPointer(pos, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(pos);
 
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(normal, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(normal);
 
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(tex, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+    glEnableVertexAttribArray(tex);
+
+//        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+//        glEnableVertexAttribArray(0);
+
+//        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+//        glEnableVertexAttribArray(1);
+
+//        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+//        glEnableVertexAttribArray(2);
+
 
     // THIS IS HOW YOU ACTIVATE TEXTURE 0 !!!!! YOU STUPID BABUN
     glActiveTexture(GL_TEXTURE0);
@@ -150,7 +176,12 @@ void GameRenderer::renderObject(QString modelName) {
 
     // Update uniforms
     // Transformation matrix
-    glUniformMatrix4fv(glGetUniformLocation(currentProgram, "transform"), 1, GL_FALSE, model->trans->data());
+    glUniformMatrix4fv(glGetUniformLocation(currentProgram, "transformInt"), 1, GL_FALSE, model->trans->data());
+
+//    QMatrix4x4 trans;
+//    trans.setToIdentity();
+//    glUniformMatrix4fv(glGetUniformLocation(currentProgram, "transformExt"), 1, GL_FALSE, trans.data());
+
 
     // Perspective Matrix
     glUniformMatrix4fv(glGetUniformLocation(currentProgram, "perspective"), 1, GL_FALSE, m_perspective.data());
